@@ -56,10 +56,10 @@ namespace Api.Data.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "KnowAs",
+                name: "KnownAs",
                 table: "Users",
                 type: "TEXT",
-                nullable: true);
+                nullable: false);
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "LastActive",
