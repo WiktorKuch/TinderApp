@@ -53,7 +53,7 @@ export class UserManagementComponent implements OnInit {
     })
    }
   
-   private arrayEqual(arr1: any, arr2: any){ // porównanie tablic z rolami czy są takie same
+   private arrayEqual(arr1: any, arr2: any){ // porównanie tablic z rolami czy są takie sam
     return JSON.stringify(arr1.sort()) === JSON.stringify(arr2.sort());
 
    }
