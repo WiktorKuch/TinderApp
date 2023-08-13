@@ -23,7 +23,10 @@ model: any = {}
 
   login(){
     this.accountService.login(this.model).subscribe({
-      next: _ => this.router.navigateByUrl('/members'),
+      next: _ => {
+        this.router.navigateByUrl('/members');
+        this.model = {}; //po wylogowaniu hasło i login znikną ze swoich miejsc 
+      }
       
     });
   }
