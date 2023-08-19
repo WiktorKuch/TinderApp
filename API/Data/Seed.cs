@@ -7,6 +7,11 @@ namespace API.Data
 {
     public class Seed
     {
+        public static async Task ClearConnections(DataContext context)
+        {
+            context.Connections.RemoveRange(context.Connections);
+            await context.SaveChangesAsync();
+        }
         public static async Task SeedUsers(UserManager<AppUser> userManager,
         RoleManager<AppRole> roleManager)
         {
@@ -34,6 +39,8 @@ namespace API.Data
             {
                 
                 user.UserName = user.UserName.ToLower();
+                user.Created = DateTime.SpecifyKind(user.Created,DateTimeKind.Utc);
+                user.LastActive = DateTime.SpecifyKind(user.LastActive,DateTimeKind.Utc);
                 await userManager.CreateAsync(user,"Pa$$w0rd"); //będzie to tworzyć i zapisywać tę zmianę w bazie danych
                  await userManager.AddToRoleAsync(user,"Member");
             }
