@@ -3,7 +3,6 @@ using API.Entities;
 using API.Extensions;
 using API.Middleware;
 using API.SignalR;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +20,7 @@ if (builder.Environment.IsDevelopment()) //jeśli tryb dev ,to conString na taki
 else 
 {
 // Use connection string provided at runtime by FlyIO.
-        var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+        string connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
         // Parse connection URL to connection string for Npgsql
         connUrl = connUrl.Replace("postgres://", string.Empty);  //wyodrębniamy info które nas interesują 
@@ -33,7 +32,7 @@ else
         var pgPass = pgUserPass.Split(":")[1];
         var pgHost = pgHostPort.Split(":")[0];
         var pgPort = pgHostPort.Split(":")[1];
-	var updatedHost = pgHost.Replace("flycast", "internal");
+	    var updatedHost = pgHost.Replace("flycast", "internal");
 
         connString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
 }
@@ -48,10 +47,10 @@ var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors(builder => builder
-.AllowAnyHeader()
-.AllowAnyMethod()
-.AllowCredentials() //do signalR-hubs
-.WithOrigins("https://localhost:4200","http://localhost:8080"));
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials() //do signalR-hubs
+    .WithOrigins("https://localhost:4200","http://localhost:8080","http://tinderosapp.dev.fly"));
 
 app.UseAuthentication(); //do you have a valid token ?
 app.UseAuthorization();  // You have a valid token.
@@ -75,7 +74,7 @@ try
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync();
     await Seed.ClearConnections(context);
-    await Seed.SeedUsers(userManager,roleManager);
+    await Seed.SeedUsers(userManager, roleManager);
 }
 catch(Exception ex)
 {

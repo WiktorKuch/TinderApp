@@ -16,7 +16,7 @@ namespace API.Controllers
     public class AccountController : BaseApiController
     {
         
-        public ITokenService _tokenService { get; }
+        public ITokenService _tokenService;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
         public AccountController( UserManager<AppUser> userManager, ITokenService tokenService,IMapper mapper)
@@ -33,7 +33,7 @@ namespace API.Controllers
 
             var user = _mapper.Map<AppUser>(registerDto);
            
-                user.UserName=registerDto.UserName.ToLower();
+                user.UserName = registerDto.UserName.ToLower();
                         
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
@@ -61,7 +61,7 @@ namespace API.Controllers
             .Include(p=>p.Photos)
             .SingleOrDefaultAsync(x=>x.UserName == loginDto.UserName);
 
-            if(user == null) return Unauthorized("invalid username");
+            if(user == null) return Unauthorized("Invalid username");
 
             var result = await _userManager.CheckPasswordAsync(user,loginDto.Password);
             if(!result) return Unauthorized("Invalid password");
