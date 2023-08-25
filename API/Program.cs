@@ -14,32 +14,32 @@ builder.Services.AddControllers();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 
-var connString = ""; //pusty ciąg dla naszego ciągu połączenia
-if (builder.Environment.IsDevelopment()) //jeśli tryb dev ,to conString na taki sam - rozwój
-    connString = builder.Configuration.GetConnectionString("DefaultConnection");
-else 
-{
-// Use connection string provided at runtime by FlyIO.
-        string connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+// var connString = ""; //pusty ciąg dla naszego ciągu połączenia
+// if (builder.Environment.IsDevelopment()) //jeśli tryb dev ,to conString na taki sam - rozwój
+//     connString = builder.Configuration.GetConnectionString("DefaultConnection");
+// else 
+// {
+// // Use connection string provided at runtime by FlyIO.
+//         string connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-        // Parse connection URL to connection string for Npgsql
-        connUrl = connUrl.Replace("postgres://", string.Empty);  //wyodrębniamy info które nas interesują 
-        var pgUserPass = connUrl.Split("@")[0];
-        var pgHostPortDb = connUrl.Split("@")[1];
-        var pgHostPort = pgHostPortDb.Split("/")[0];
-        var pgDb = pgHostPortDb.Split("/")[1];
-        var pgUser = pgUserPass.Split(":")[0];
-        var pgPass = pgUserPass.Split(":")[1];
-        var pgHost = pgHostPort.Split(":")[0];
-        var pgPort = pgHostPort.Split(":")[1];
-	    var updatedHost = pgHost.Replace("flycast", "internal");
+//         // Parse connection URL to connection string for Npgsql
+//         connUrl = connUrl.Replace("postgres://", string.Empty);  //wyodrębniamy info które nas interesują 
+//         var pgUserPass = connUrl.Split("@")[0];
+//         var pgHostPortDb = connUrl.Split("@")[1];
+//         var pgHostPort = pgHostPortDb.Split("/")[0];
+//         var pgDb = pgHostPortDb.Split("/")[1];
+//         var pgUser = pgUserPass.Split(":")[0];
+//         var pgPass = pgUserPass.Split(":")[1];
+//         var pgHost = pgHostPort.Split(":")[0];
+//         var pgPort = pgHostPort.Split(":")[1];
+// 	    var updatedHost = pgHost.Replace("flycast", "internal");
 
-        connString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
-}
-builder.Services.AddDbContext<DataContext>(opt =>
-{
-    opt.UseNpgsql(connString);
-});
+//         connString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+// }
+// builder.Services.AddDbContext<DataContext>(opt =>
+// {
+//     opt.UseNpgsql(connString);
+// });
 
 var app = builder.Build();
 
@@ -50,7 +50,7 @@ app.UseCors(builder => builder
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials() //do signalR-hubs
-    .WithOrigins("https://localhost:4200","http://localhost:8080","http://tinderosapp.dev.fly"));
+    .WithOrigins("https://localhost:4200"));
 
 app.UseAuthentication(); //do you have a valid token ?
 app.UseAuthorization();  // You have a valid token.

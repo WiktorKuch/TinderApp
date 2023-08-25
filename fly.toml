@@ -1,44 +1,24 @@
-# fly.toml app configuration file generated for tinderosapp on 2023-08-23T16:23:06+02:00
+# fly.toml app configuration file generated for tinderosapp on 2023-08-23T21:39:16+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
 app = "tinderosapp"
-kill_signal = "SIGINT"
-kill_timeout = 5
-processes = []
-
+primary_region = "waw"
 
 [build]
   image = "natara97/datingapp:latest"
 
 [env]
-  ASPNETCORE_URLS = "http://+:8080"
-  CloudinarySettings__CloudName = "dkvfblaol"
-  CloudinarySettings__ApiKey = "271395749487926"
-  
-
-[experimental]
-allowed_public_ports = []
-auto_rollback = true
+ASPNETCORE_URLS="http://+:8080"
+ CloudinarySettings__CloudName="dkvfblaol"
+  CloudinarySettings__ApiKey="271395749487926"
 
 
-[[services]]
-  http_checks = []
+[http_service]
   internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
   processes = ["app"]
-  protocol = "tcp"
-  script_checks = []
-  
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
-
-  [[services.ports]]
-     force_https = true
-     handlers = ["http"]
-      port = 80
-    
-   
-  
